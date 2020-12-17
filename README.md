@@ -1,2 +1,2 @@
 # spraylist
-Simple password sprying password list generator
+Simple password list generator for password sprying
