@@ -9,19 +9,20 @@ import (
 )
 
 //Toggle the case of letters in words present in a dictionary.
-func Toggle(w string) string {
-	buff := make([]rune, len(w))
+func Toggle(w string) (s string) {
+	var b strings.Builder
+	b.Grow(len(w))
 	even := true
 	for _, v := range w {
 		if even {
-			buff = append(buff, unicode.ToUpper(v))
+			b.WriteRune(unicode.ToUpper(v))
 			even = false
 		} else {
-			buff = append(buff, v)
+			b.WriteRune(v)
 			even = true
 		}
 	}
-	return string(buff)
+	return b.String()
 }
 
 //ToTitle word.
@@ -36,23 +37,45 @@ func Uper(w string) (s string) {
 
 //Lower case
 func Lower(w string) (s string) {
-	return strings.Title(w)
+	return strings.ToLower(w)
 }
 
 //AppendSuffix apends suffix, do not append digit suffix if word end with digit
 func AppendSuffix(w string, sfx string) string {
-	if IsDigit(w[len(w)-1:]) || IsDigit(sfx[0:1]) {
+	if IsDigit(w[len(w)-1:]) && IsDigit(sfx[0:1]) {
 		return w
 	}
-	return w + sfx
+	var b strings.Builder
+	b.Grow(len(w) + len(sfx))
+	b.WriteString(w)
+	b.WriteString(sfx)
+	return b.String()
 }
 
 //Prepend word with preffix, do not append digit prefix if word start with digit
-func Prepend(w string, sfx string) string {
-	if IsDigit(w[len(w)-1:]) || IsDigit(sfx[0:1]) {
+func Prepend(w string, pfx string) string {
+	if IsDigit(w[0:1]) && IsDigit(pfx[len(pfx)-1:]) {
 		return w
 	}
-	return w + sfx
+	var b strings.Builder
+	b.Grow(len(w) + len(pfx))
+	b.WriteString(pfx)
+	b.WriteString(w)
+	return b.String()
+}
+
+//Replace single char
+func Replace(w string, c, r string) string {
+	var b strings.Builder
+	b.Grow(len(w))
+	for _, v := range w {
+		if v == rune(c[0]) {
+			b.WriteString(r)
+		} else {
+			b.WriteRune(v)
+		}
+	}
+	return b.String()
 }
 
 //IsDigit retutns true if string is integer

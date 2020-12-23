@@ -16,9 +16,25 @@ func TestTransforms(t *testing.T) {
 	if Uper(w) != "NOWEMBER" {
 		t.Error(Uper(w))
 	}
-	if AppendSuffix(w, "!") != "Nowember1" {
+	if ToTitle("nowember") != "Nowember" {
+		t.Error(ToTitle("nowember"))
+	}
+	if AppendSuffix(w, "!") != "Nowember!" {
 		t.Error(AppendSuffix(w, "!"))
 	}
+	if AppendSuffix("Nowember1", "2011") != "Nowember1" {
+		t.Error(AppendSuffix("Nowember1", "2011"))
+	}
+	if Replace(w, "o", "0") != "N0wember" {
+		Replace("N0wember", "0", "0")
+	}
+	if Prepend("Password", "#") != "#Password" {
+		Prepend("Password", "#")
+	}
+	if Prepend("12Password", "1") != "Password" {
+		Prepend("12Password", "1")
+	}
+
 }
 
 func TestUnuque(t *testing.T) {
