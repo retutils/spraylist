@@ -1,5 +1,5 @@
 //Package mutate. Provide utils to mutate passwords in list
-package tranform
+package transform
 
 import (
 	"testing"
@@ -33,6 +33,9 @@ func TestTransforms(t *testing.T) {
 	}
 	if Prepend("12Password", "1") != "Password" {
 		Prepend("12Password", "1")
+	}
+	if RussToEngKey("Сентябрь2020") != "Ctynz,hm2020" {
+		t.Error(RussToEngKey("Сентябрь2020"))
 	}
 
 }

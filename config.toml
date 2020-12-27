@@ -8,12 +8,26 @@ CharacterGroup = ["lower","upper","number","nonAlpha"]
 Lehgth = 9
 #Password expiration duration
 Expire = 90
-#How many Suffixes 
-Suffixes = 3
-#How many Delimeters we are going to use 
-Delimeters = 1
-#How mamy commonword we are going to use 
-Common = 20
+
+
+[Rules]
+#Immlemented transform "Lower": words to lower case,"Upper": to upercase,
+#"Title": to title,"Togle": toogle chars in words,  
+Transforms = ["Lower","Upper","Title","Togle"]
+#Dictonaries to use (we will use english keyboard Months inrussian)
+Dictionaries=["Month","MonthRus","Common"]
+#We ignore num suffixes if words in dict ends with number      
+Suffixes = ["1","!","123"]
+#Delimeter betwen year and short year suffixes
+Delimeters=["@","$","#"]
+
+[Replace]
+s = "$"
+a = "@" 
+l = "1"
+O = "0"
+
+
 
 [Month]
 January = ["January", "Winter"]
@@ -29,8 +43,24 @@ October = ["October", "Fall", "Autumn", "Winter"]
 November = ["November", "Fall", "Autumn", "Winter", "Thanksgiving"]
 December = ["December", "Winter", "Christmas"]
 
+[MonthRus]
+January = ["Январь", "Зима"]
+February = ["Февраль", "Зима"]
+March = ["Март", "Зима", "Весна"]
+April = ["Апрель", "Весна"]
+May = ["Май", "Весна", "Лето"]
+June = ["Июнь", "Весна", "Лето"]
+July = ["Июль", "Лето"]
+August= ["Август", "Лето", "Осень"]
+September = ["Сентябрь", "Осень", "Лето"]
+October = ["Октябрь", "Осень"]
+November = ["Ноябрь", "Осень"]
+December = ["Декабрь", "Зима"]
+
+
 [Company]
 Names= ["EPAM"]
+
 #Common words
 [Common]
 Words = [
@@ -61,23 +91,7 @@ Words = [
         "Sample","777777","jesus","taylor","b123456","whatever","welcome",
         "ginger","flower","333333","1111111111","robert","samsung","a12345",
         "loveme","gabriel","alexander","cheese","passw0rd","142536","peanut",
-        "11223344","thomas","angel"
-        ]
-
-
-#Transform words case
-CharCase = ["Lower","Upper","Title","Togle"]
-#We ignore num suffixes if words in dict ends with number      
-Suffixes = ["1","!","123","$","#","0","2","3","@","?"]
-#Delimeter betwen year and short year suffixes
-Delimeters=["@","$","#"]
-
-
-[Replace]
-s = "$"
-a = "@" 
-l = "1"
-O = "0"
+        "11223344","thomas","angel"]
          
 
 

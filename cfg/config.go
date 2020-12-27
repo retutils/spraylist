@@ -9,11 +9,13 @@ import (
 
 //Config holds configuration
 type Config struct {
-	Policy  *Policy
-	Month   map[string][]string
-	Company *Company
-	Common  *Common
-	Replace map[string]string
+	Policy   *Policy
+	Rules    *Rules
+	Replace  map[string]string
+	Month    map[string][]string
+	MonthRus map[string][]string
+	Company  *Company
+	Common   *Common
 }
 
 //Policy for password generation
@@ -22,9 +24,14 @@ type Policy struct {
 	CharacterGroup     []string //Char group preset in the passwords
 	Lehgth             int      //Min passwords length
 	Expire             int      //Password expiration in days
-	Suffixes           int      //How many Suffixes
-	Delimeters         int      //How many Delimeters we are going to use
-	Common             int      //How mamy commonword we are going to use if 0 common words will be not used at all
+}
+
+//Rules for password generation
+type Rules struct {
+	Transforms   []string
+	Dictionaries []string
+	Suffixes     []string
+	Delimeters   []string
 }
 
 //Company names
@@ -34,10 +41,7 @@ type Company struct {
 
 //Common config
 type Common struct {
-	Words      []string
-	CharCase   []string
-	Suffixes   []string
-	Delimeters []string
+	Words []string
 }
 
 //Seazon keep pair of

@@ -21,15 +21,27 @@ func TestPolicy(t *testing.T) {
 	if c.Policy.Expire != 90 {
 		t.Error("Wrong Expiration", c.Policy.Expire)
 	}
-	if c.Policy.Delimeters != 1 {
-		t.Error("Wrong delims", c.Policy.Delimeters)
+
+}
+
+func TestRules(t *testing.T) {
+	c, err := New("config.toml")
+	if err != nil {
+		t.Fatal(err)
 	}
-	if c.Policy.Suffixes != 3 {
-		t.Error("Wrong suffixes count", c.Policy.Suffixes)
+	if c.Rules.Delimeters[0] != "@" {
+		t.Error(c.Rules.Delimeters[0])
 	}
-	if c.Policy.Common != 20 {
-		t.Error("Wrong common words count", c.Policy.Common)
+	if c.Rules.Suffixes[0] != "1" {
+		t.Error(c.Rules.Suffixes[0])
 	}
+	if c.Rules.Transforms[0] != "Lower" {
+		t.Error(c.Rules.Transforms[0])
+	}
+	if c.Replace["s"] != "$" {
+		t.Error(c.Replace["s"])
+	}
+
 }
 
 func TestMounts(t *testing.T) {
@@ -39,6 +51,9 @@ func TestMounts(t *testing.T) {
 	}
 	if c.Month["January"][0] != "January" {
 		t.Error("Wrong month", c.Month["January"])
+	}
+	if c.MonthRus["January"][0] != "Январь" {
+		t.Error("Wrong month", c.MonthRus["January"])
 	}
 	m := c.MonthsYear()
 	if len(m) < 4 {
@@ -56,17 +71,5 @@ func TestCommon(t *testing.T) {
 	}
 	if c.Common.Words[0] != "Password" {
 		t.Error(c.Common.Words[0])
-	}
-	if c.Common.CharCase[0] != "Lower" {
-		t.Error(c.Common.CharCase[0])
-	}
-	if c.Common.Delimeters[0] != "@" {
-		t.Error(c.Common.Delimeters[0])
-	}
-	if c.Common.Suffixes[0] != "1" {
-		t.Error(c.Common.Suffixes[0])
-	}
-	if c.Replace["s"] != "$" {
-		t.Error(c.Replace["s"])
 	}
 }
