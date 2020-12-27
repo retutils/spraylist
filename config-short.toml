@@ -13,9 +13,9 @@ Expire = 90
 [Rules]
 #Immlemented transform "Lower": words to lower case,"Upper": to upercase,
 #"Title": to title,"Togle": toogle chars in words,  
-Transforms = ["Lower","Upper","Title","Suffixes","Replace"]
+Transforms = ["Title","Suffixes","Replace"]
 #Dictonaries to use (we are going to use english keyboard in russian )
-Dictionaries=["Month","Company"]
+Dictionaries=["Month","Common"]
 #We ignore num suffixes if words in dict ends with number      
 Suffixes = ["1","!","123"]
 #Delimeter betwen year and short year suffixes
