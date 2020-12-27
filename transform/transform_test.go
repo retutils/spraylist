@@ -19,6 +19,12 @@ func TestTransforms(t *testing.T) {
 	if ToTitle("nowember") != "Nowember" {
 		t.Error(ToTitle("nowember"))
 	}
+	if ToTitle("nowember1") != "Nowember1" {
+		t.Error(ToTitle("nowember1"))
+	}
+	if ToTitle("nowember,h1") != "Nowember,h1" {
+		t.Error(ToTitle("nowember,h1"))
+	}
 	if AppendSuffix(w, "!") != "Nowember!" {
 		t.Error(AppendSuffix(w, "!"))
 	}

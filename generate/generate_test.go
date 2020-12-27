@@ -23,30 +23,37 @@ func TestBasic(t *testing.T) {
 	if _, ok := dict.Result["January@20"]; !ok {
 		t.Error("monnth year short with delimeter not present")
 	}
-	dict.makeDict()
+}
+
+func TestDict(t *testing.T) {
+	dict, err := New("../cfg/config.toml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	dict.MakeDictonary()
 	if _, ok := dict.Result["November@20"]; !ok {
 		t.Error("monnth year short with delimeter not present")
 	}
-	if _, ok := dict.Result["Ctynz,hm2020"]; !ok {
+	if _, ok := dict.Result["Ctynz,hm@2020"]; !ok {
 		t.Error("monnth year russian with eng keyboard not present")
 	}
 	if _, ok := dict.Result["Password2020"]; !ok {
 		t.Error("Common word with year not present")
 	}
-	dict.addReplaces()
+	dict.addReplaces("Password2020")
 	if _, ok := dict.Result["Pa$$word2020"]; !ok {
 		t.Error("Replaced common word  with year not present")
 	}
-	dict.addSuffixes()
+	dict.addSuffixes("Pa$$word2020")
 	if _, ok := dict.Result["Pa$$word2020!"]; !ok {
 		t.Error("Suffix not present")
 	}
-	dict.addTransforms()
+	dict.addWithTransforms("Password2020")
 	if _, ok := dict.Result["WiNtEr2020!"]; !ok {
 		t.Error("Toogle transform not present")
 	}
 	if _, ok := dict.Result["winter2020!"]; !ok {
 		t.Error("Lover transform not present")
 	}
-
+	dict.Write()
 }

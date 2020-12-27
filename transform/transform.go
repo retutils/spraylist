@@ -35,7 +35,14 @@ func Toggle(w string) (s string) {
 
 //ToTitle word.
 func ToTitle(w string) (s string) {
-	return strings.Title(w)
+	if IsLetter(w) {
+		return strings.Title(w)
+	}
+	var b strings.Builder
+	b.Grow(len(w))
+	b.WriteString(strings.ToUpper(w[0:1]))
+	b.WriteString(strings.ToLower(w[1:]))
+	return b.String()
 }
 
 //Uper case word.
@@ -104,6 +111,16 @@ func RussToEngKey(w string) string {
 func IsDigit(s string) bool {
 	if _, err := strconv.Atoi(s); err != nil {
 		return false
+	}
+	return true
+}
+
+//IsLetter retutns true if string contain only letter
+func IsLetter(s string) bool {
+	for _, r := range s {
+		if !unicode.IsLetter(r) {
+			return false
+		}
 	}
 	return true
 }

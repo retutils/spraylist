@@ -1,7 +1,9 @@
 package generate
 
 import (
-	"fmt"
+	"io"
+	"log"
+	"os"
 	"strings"
 
 	"github.com/spraylist/cfg"
@@ -15,7 +17,6 @@ type Dictonary struct {
 	Conf   *cfg.Config
 	Policy *policy.Policy
 	Months []cfg.Seazon
-	Years  map[string]struct{}
 }
 
 //New Dictonary from config file
@@ -30,83 +31,105 @@ func New(path string) (dict *Dictonary, err error) {
 		return nil, err
 	}
 	dict.Result = make(map[string]struct{}, 0)
-	dict.Years = make(map[string]struct{}, 0)
 	dict.Months = dict.Conf.MonthsYear()
 	return dict, nil
 }
 
-//Make seazon Dictonary according to config
-func (dict *Dictonary) makeDict() {
+//MakeDictonary according to config
+func (dict *Dictonary) MakeDictonary() {
 	for _, month := range dict.Months {
-		dict.Years[month.Year] = struct{}{}
-		dict.Years[month.YearShort] = struct{}{}
-		if dict.hasDict("Month") {
-			for _, monthEng := range dict.Conf.Month[month.Month] {
-				dict.addMonth(monthEng, month.Year, month.YearShort)
+		for _, v := range dict.Conf.Rules.Dictionaries {
+			switch v {
+			case "Month":
+				for _, monthEng := range dict.Conf.Month[month.Month] {
+					dict.addMonth(monthEng, month.Year, month.YearShort)
+				}
+			case "MonthRus":
+				for _, monthRus := range dict.Conf.MonthRus[month.Month] {
+					rusEng := transform.RussToEngKey(monthRus)
+					dict.addMonth(rusEng, month.Year, month.YearShort)
+				}
+			case "Common":
+				for _, word := range dict.Conf.Common.Words {
+					dict.addMonth(word, month.Year, month.YearShort)
+				}
+			case "Company":
+				for _, word := range dict.Conf.Company.Names {
+					dict.addMonth(word, month.Year, month.YearShort)
+				}
 			}
 		}
-		if dict.hasDict("MonthRus") {
-			for _, monthRus := range dict.Conf.MonthRus[month.Month] {
-				rusEng := transform.RussToEngKey(monthRus)
-				dict.addMonth(rusEng, month.Year, month.YearShort)
-
-			}
-		}
-		if dict.hasDict("Common") {
-			for _, word := range dict.Conf.Common.Words {
-				dict.addMonth(word, month.Year, month.YearShort)
-
-			}
-		}
-
 	}
 	return
 }
 
 func (dict *Dictonary) addMonth(month, year, yearShort string) {
-	dict.Result[month] = struct{}{}
-	dict.Result[transform.AppendSuffix(month, year)] = struct{}{}
-	dict.Result[transform.AppendSuffix(month, yearShort)] = struct{}{}
+	dict.addWithTransforms(month)
+	dict.addWithTransforms(transform.AppendSuffix(month, year))
+	dict.addWithTransforms(transform.AppendSuffix(month, yearShort))
 	if len(dict.Conf.Rules.Delimeters) > 0 {
 		for _, delim := range dict.Conf.Rules.Delimeters {
 			withdelim := transform.AppendSuffix(month, delim)
-			dict.Result[transform.AppendSuffix(withdelim, year)] = struct{}{}
-			dict.Result[transform.AppendSuffix(withdelim, yearShort)] = struct{}{}
+			dict.addWithTransforms(transform.AppendSuffix(withdelim, year))
+			dict.addWithTransforms(transform.AppendSuffix(withdelim, yearShort))
 		}
 	}
 }
 
-func (dict *Dictonary) addTransforms() error {
-	for word := range dict.Result {
-		for _, v := range dict.Conf.Rules.Transforms {
-			switch strings.ToLower(v) {
-			case "lower":
-				dict.Result[transform.Lower(word)] = struct{}{}
-			case "upper":
-				dict.Result[transform.Uper(word)] = struct{}{}
-			case "title":
-				dict.Result[transform.Uper(word)] = struct{}{}
-			case "togle":
-				dict.Result[transform.Toggle(word)] = struct{}{}
-			default:
-				return fmt.Errorf("inforect trnsform %s", v)
+func (dict *Dictonary) addWithTransforms(word string) {
+	buff := make([]string, 0)
+	for _, v := range dict.Conf.Rules.Transforms {
+		switch strings.ToLower(v) {
+		case "lower":
+			lower := transform.Lower(word)
+			dict.Result[lower] = struct{}{}
+			buff = append(buff, lower)
+		case "upper":
+			upper := transform.Uper(word)
+			dict.Result[upper] = struct{}{}
+			buff = append(buff, upper)
+		case "title":
+			title := transform.ToTitle(strings.ToLower(word))
+			dict.Result[title] = struct{}{}
+			buff = append(buff, title)
+		case "togle":
+			togle := transform.Toggle(word)
+			dict.Result[togle] = struct{}{}
+			buff = append(buff, togle)
+		case "suffixes":
+			sfxbuff := make([]string, 0)
+			for _, w := range buff {
+				dict.addSuffixes(w)
+				sfxbuff = append(sfxbuff, w)
 			}
+			buff = append(buff, sfxbuff...)
+		case "replace":
+			for _, w := range buff {
+				dict.addReplaces(w)
+			}
+		default:
+			log.Fatalf("inforect transform %s", v)
 		}
 	}
-	return nil
+	return
 }
 
-func (dict *Dictonary) addSuffixes() {
-	for word := range dict.Result {
-		for _, sfx := range dict.Conf.Rules.Suffixes {
-			dict.Result[transform.AppendSuffix(word, sfx)] = struct{}{}
-		}
+func (dict *Dictonary) addSuffixes(word string) {
+	for _, sfx := range dict.Conf.Rules.Suffixes {
+		dict.Result[transform.AppendSuffix(word, sfx)] = struct{}{}
 	}
 }
-func (dict *Dictonary) addReplaces() {
+func (dict *Dictonary) addReplaces(word string) {
+	for replace, replaceTo := range dict.Conf.Replace {
+		dict.Result[transform.Replace(word, replace, replaceTo)] = struct{}{}
+	}
+}
+
+func (dict *Dictonary) Write() {
 	for word := range dict.Result {
-		for replace, replaceTo := range dict.Conf.Replace {
-			dict.Result[transform.Replace(word, replace, replaceTo)] = struct{}{}
+		if dict.Policy.Match(word) {
+			io.WriteString(os.Stdout, word)
+			io.WriteString(os.Stdout, "\n")
 		}
 	}
 }

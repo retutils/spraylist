@@ -13,9 +13,9 @@ Expire = 90
 [Rules]
 #Immlemented transform "Lower": words to lower case,"Upper": to upercase,
 #"Title": to title,"Togle": toogle chars in words,  
-Transforms = ["Lower","Upper","Title","Togle"]
-#Dictonaries to use (we will use english keyboard Months inrussian)
-Dictionaries=["Month","MonthRus","Common"]
+Transforms = ["Lower","Upper","Title","Togle","Suffixes","Replace"]
+#Dictonaries to use (we are going to use english keyboard in russian )
+Dictionaries=["Month","MonthRus","Company","Common"]
 #We ignore num suffixes if words in dict ends with number      
 Suffixes = ["1","!","123"]
 #Delimeter betwen year and short year suffixes
@@ -23,8 +23,12 @@ Delimeters=["@","$","#"]
 
 [Replace]
 s = "$"
-a = "@" 
+S = "$"
+a = "@"
+A = "@" 
 l = "1"
+L = "1"
+o = "0"
 O = "0"
 
 

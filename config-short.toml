@@ -1,0 +1,69 @@
+#Password policy
+[Policy]
+#The password should fulfill at least $RequiredChargroups of the following for character group
+RequiredChargroups = 3
+#Char group preset in the passwords
+CharacterGroup = ["lower","upper","number","nonAlpha"]
+#Min passwords length
+Lehgth = 9
+#Password expiration duration
+Expire = 90
+
+
+[Rules]
+#Immlemented transform "Lower": words to lower case,"Upper": to upercase,
+#"Title": to title,"Togle": toogle chars in words,  
+Transforms = ["Lower","Upper","Title","Suffixes","Replace"]
+#Dictonaries to use (we are going to use english keyboard in russian )
+Dictionaries=["Month","Company"]
+#We ignore num suffixes if words in dict ends with number      
+Suffixes = ["1","!","123"]
+#Delimeter betwen year and short year suffixes
+Delimeters=["@"]
+
+[Replace]
+s = "$"
+a = "@"
+
+
+
+
+[Month]
+January = ["January", "Winter"]
+February = ["February", "Winter"]
+March = ["March", "Winter", "Spring"]
+April = ["April", "Spring"]
+May = ["May", "Spring", "Summer"]
+June = ["June", "Spring","Summer"]
+July = ["July", "Summer"]
+August= ["August", "Summer", "Fall", "Autumn"]
+September = ["September", "Fall", "Autumn"]
+October = ["October", "Fall", "Autumn", "Winter"]
+November = ["November", "Fall", "Autumn", "Winter", "Thanksgiving"]
+December = ["December", "Winter", "Christmas"]
+
+[MonthRus]
+January = ["Январь", "Зима"]
+February = ["Февраль", "Зима"]
+March = ["Март", "Зима", "Весна"]
+April = ["Апрель", "Весна"]
+May = ["Май", "Весна", "Лето"]
+June = ["Июнь", "Весна", "Лето"]
+July = ["Июль", "Лето"]
+August= ["Август", "Лето", "Осень"]
+September = ["Сентябрь", "Осень", "Лето"]
+October = ["Октябрь", "Осень"]
+November = ["Ноябрь", "Осень"]
+December = ["Декабрь", "Зима"]
+
+
+[Company]
+Names= ["EPAM"]
+
+#Common words
+[Common]
+Words = ["Password","123456"]
+         
+
+
+
