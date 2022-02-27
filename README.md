@@ -1,5 +1,5 @@
 # spraylist
-Simple password list generator for password sprying
+Password list generator on steroide for password sprying
 ```bash
 Usage:
   sprylist -c config.toml
