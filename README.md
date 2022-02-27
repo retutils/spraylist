@@ -8,3 +8,4 @@ Options:
   -h              show usage and exit
   -c              config file (default config.toml)
 ```
+## Glory to Ukraine !
