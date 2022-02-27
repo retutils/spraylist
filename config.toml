@@ -63,7 +63,8 @@ December = ["Декабрь", "Зима"]
 
 
 [Company]
-Names= ["EPAM"]
+Names= ["YOU_TARGET_COMPANY_NAME_HERE"]
+#Example: Names= ["SBERBANK"]
 
 #Common words
 [Common]
